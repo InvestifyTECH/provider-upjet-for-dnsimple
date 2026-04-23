@@ -1,4 +1,4 @@
-apiVersion: null.template.m.crossplane.io/v1alpha1
+apiVersion: null.upjet-for-dnsimple.m.crossplane.io/v1alpha1
 kind: Resource
 metadata:
   annotations:

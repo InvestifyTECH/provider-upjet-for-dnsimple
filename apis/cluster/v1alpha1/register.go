@@ -7,7 +7,7 @@ import (
 
 // Package type metadata.
 const (
-	Group   = "template.crossplane.io"
+	Group   = "upjet-for-dnsimple.crossplane.nvst.cloud"
 	Version = "v1alpha1"
 )
 
