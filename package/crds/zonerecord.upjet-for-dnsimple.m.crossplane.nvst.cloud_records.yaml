@@ -4,18 +4,18 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.19.0
-  name: resources.null.upjet-for-dnsimple.m.crossplane.io
+  name: records.zonerecord.upjet-for-dnsimple.m.crossplane.nvst.cloud
 spec:
-  group: null.upjet-for-dnsimple.m.crossplane.io
+  group: zonerecord.upjet-for-dnsimple.m.crossplane.nvst.cloud
   names:
     categories:
     - crossplane
     - managed
     - upjet-for-dnsimple
-    kind: Resource
-    listKind: ResourceList
-    plural: resources
-    singular: resource
+    kind: Record
+    listKind: RecordList
+    plural: records
+    singular: record
   scope: Namespaced
   versions:
   - additionalPrinterColumns:
@@ -31,13 +31,10 @@ spec:
     - jsonPath: .metadata.creationTimestamp
       name: AGE
       type: date
-    name: v1alpha1
+    name: v1beta1
     schema:
       openAPIV3Schema:
-        description: Resource is the Schema for the Resources API. The null_resource
-          resource implements the standard resource lifecycle but takes no further
-          action.hashicorp. The triggers argument allows specifying an arbitrary set
-          of values that, when changed, will cause the resource to be replaced.
+        description: Record is the Schema for the Records API. ""
         properties:
           apiVersion:
             description: |-
@@ -57,18 +54,29 @@ spec:
           metadata:
             type: object
           spec:
-            description: ResourceSpec defines the desired state of Resource
+            description: RecordSpec defines the desired state of Record
             properties:
               forProvider:
                 properties:
-                  triggers:
-                    additionalProperties:
-                      type: string
-                    description: |-
-                      running any associated provisioners.
-                      A map of arbitrary strings that, when changed, will force the null resource to be replaced, re-running any associated provisioners.
-                    type: object
-                    x-kubernetes-map-type: granular
+                  name:
+                    description: The name of the record
+                    type: string
+                  priority:
+                    description: The priority of the record - only useful for some
+                      record types
+                    type: string
+                  ttl:
+                    description: The TTL of the record
+                    type: string
+                  type:
+                    description: The type of the record
+                    type: string
+                  value:
+                    description: The value of the record
+                    type: string
+                  zoneName:
+                    description: The domain to add the record to
+                    type: string
                 type: object
               initProvider:
                 description: |-
@@ -83,14 +91,25 @@ spec:
                   for example because of an external controller is managing them, like an
                   autoscaler.
                 properties:
-                  triggers:
-                    additionalProperties:
-                      type: string
-                    description: |-
-                      running any associated provisioners.
-                      A map of arbitrary strings that, when changed, will force the null resource to be replaced, re-running any associated provisioners.
-                    type: object
-                    x-kubernetes-map-type: granular
+                  name:
+                    description: The name of the record
+                    type: string
+                  priority:
+                    description: The priority of the record - only useful for some
+                      record types
+                    type: string
+                  ttl:
+                    description: The TTL of the record
+                    type: string
+                  type:
+                    description: The type of the record
+                    type: string
+                  value:
+                    description: The value of the record
+                    type: string
+                  zoneName:
+                    description: The domain to add the record to
+                    type: string
                 type: object
               managementPolicies:
                 default:
@@ -150,23 +169,56 @@ spec:
             required:
             - forProvider
             type: object
+            x-kubernetes-validations:
+            - message: spec.forProvider.name is a required parameter
+              rule: '!(''*'' in self.managementPolicies || ''Create'' in self.managementPolicies
+                || ''Update'' in self.managementPolicies) || has(self.forProvider.name)
+                || (has(self.initProvider) && has(self.initProvider.name))'
+            - message: spec.forProvider.type is a required parameter
+              rule: '!(''*'' in self.managementPolicies || ''Create'' in self.managementPolicies
+                || ''Update'' in self.managementPolicies) || has(self.forProvider.type)
+                || (has(self.initProvider) && has(self.initProvider.type))'
+            - message: spec.forProvider.value is a required parameter
+              rule: '!(''*'' in self.managementPolicies || ''Create'' in self.managementPolicies
+                || ''Update'' in self.managementPolicies) || has(self.forProvider.value)
+                || (has(self.initProvider) && has(self.initProvider.value))'
+            - message: spec.forProvider.zoneName is a required parameter
+              rule: '!(''*'' in self.managementPolicies || ''Create'' in self.managementPolicies
+                || ''Update'' in self.managementPolicies) || has(self.forProvider.zoneName)
+                || (has(self.initProvider) && has(self.initProvider.zoneName))'
           status:
-            description: ResourceStatus defines the observed state of Resource.
+            description: RecordStatus defines the observed state of Record.
             properties:
               atProvider:
                 properties:
                   id:
-                    description: (String) This is set to a random value at create
-                      time.
+                    description: The record ID
                     type: string
-                  triggers:
-                    additionalProperties:
-                      type: string
-                    description: |-
-                      running any associated provisioners.
-                      A map of arbitrary strings that, when changed, will force the null resource to be replaced, re-running any associated provisioners.
-                    type: object
-                    x-kubernetes-map-type: granular
+                  name:
+                    description: The name of the record
+                    type: string
+                  priority:
+                    description: The priority of the record - only useful for some
+                      record types
+                    type: string
+                  qualifiedName:
+                    description: The FQDN of the record
+                    type: string
+                  ttl:
+                    description: The TTL of the record
+                    type: string
+                  type:
+                    description: The type of the record
+                    type: string
+                  value:
+                    description: The value of the record
+                    type: string
+                  zoneId:
+                    description: The domain ID of the record
+                    type: string
+                  zoneName:
+                    description: The domain to add the record to
+                    type: string
                 type: object
               conditions:
                 description: Conditions of the resource.

@@ -4,9 +4,9 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.19.0
-  name: providerconfigusages.upjet-for-dnsimple.crossplane.io
+  name: providerconfigusages.upjet-for-dnsimple.crossplane.nvst.cloud
 spec:
-  group: upjet-for-dnsimple.crossplane.io
+  group: upjet-for-dnsimple.crossplane.nvst.cloud
   names:
     categories:
     - crossplane

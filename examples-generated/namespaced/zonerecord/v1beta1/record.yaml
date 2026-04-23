@@ -1,0 +1,16 @@
+apiVersion: zonerecord.upjet-for-dnsimple.m.crossplane.nvst.cloud/v1beta1
+kind: Record
+metadata:
+  annotations:
+    meta.upbound.io/example-id: zonerecord/v1beta1/record
+  labels:
+    testing.upbound.io/example-name: foobar
+  name: foobar
+  namespace: crossplane-system
+spec:
+  forProvider:
+    name: ""
+    ttl: 3600
+    type: A
+    value: 192.168.0.11
+    zoneName: ${var.dnsimple_domain}

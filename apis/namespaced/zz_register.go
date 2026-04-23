@@ -10,17 +10,17 @@ package namespaced
 import (
 	"k8s.io/apimachinery/pkg/runtime"
 
-	v1alpha1 "github.com/InvestifyTECH/provider-upjet-for-dnsimple/apis/namespaced/null/v1alpha1"
-	v1alpha1namespaced "github.com/InvestifyTECH/provider-upjet-for-dnsimple/apis/namespaced/v1alpha1"
+	v1alpha1 "github.com/InvestifyTECH/provider-upjet-for-dnsimple/apis/namespaced/v1alpha1"
 	v1beta1 "github.com/InvestifyTECH/provider-upjet-for-dnsimple/apis/namespaced/v1beta1"
+	v1beta1zonerecord "github.com/InvestifyTECH/provider-upjet-for-dnsimple/apis/namespaced/zonerecord/v1beta1"
 )
 
 func init() {
 	// Register the types with the Scheme so the components can map objects to GroupVersionKinds and back
 	AddToSchemes = append(AddToSchemes,
 		v1alpha1.SchemeBuilder.AddToScheme,
-		v1alpha1namespaced.SchemeBuilder.AddToScheme,
 		v1beta1.SchemeBuilder.AddToScheme,
+		v1beta1zonerecord.SchemeBuilder.AddToScheme,
 	)
 }
 

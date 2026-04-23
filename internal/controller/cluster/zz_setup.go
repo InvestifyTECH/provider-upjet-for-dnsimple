@@ -9,16 +9,16 @@ import (
 
 	"github.com/crossplane/upjet/v2/pkg/controller"
 
-	resource "github.com/InvestifyTECH/provider-upjet-for-dnsimple/internal/controller/cluster/null/resource"
 	providerconfig "github.com/InvestifyTECH/provider-upjet-for-dnsimple/internal/controller/cluster/providerconfig"
+	record "github.com/InvestifyTECH/provider-upjet-for-dnsimple/internal/controller/cluster/zonerecord/record"
 )
 
 // Setup creates all controllers with the supplied logger and adds them to
 // the supplied manager.
 func Setup(mgr ctrl.Manager, o controller.Options) error {
 	for _, setup := range []func(ctrl.Manager, controller.Options) error{
-		resource.Setup,
 		providerconfig.Setup,
+		record.Setup,
 	} {
 		if err := setup(mgr, o); err != nil {
 			return err
@@ -31,8 +31,8 @@ func Setup(mgr ctrl.Manager, o controller.Options) error {
 // the supplied manager gated.
 func SetupGated(mgr ctrl.Manager, o controller.Options) error {
 	for _, setup := range []func(ctrl.Manager, controller.Options) error{
-		resource.SetupGated,
 		providerconfig.SetupGated,
+		record.SetupGated,
 	} {
 		if err := setup(mgr, o); err != nil {
 			return err

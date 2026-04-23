@@ -1,40 +1,108 @@
-name: hashicorp/null
+name: dnsimple/dnsimple
 resources:
-    null_resource:
+    dnsimple_domain:
         subCategory: ""
-        description: The null_resource resource implements the standard resource lifecycle but takes no further action. On Terraform 1.4 and later, use the terraform_data resource type https://developer.hashicorp.com/terraform/language/resources/terraform-data instead. Terraform 1.9 and later support the moved configuration block from null_resource to terraform_data. The triggers argument allows specifying an arbitrary set of values that, when changed, will cause the resource to be replaced.
-        name: null_resource
-        title: null_resource Resource - terraform-provider-null
+        description: '""'
+        name: dnsimple_domain
+        title: dnsimple_domain
         examples:
-            - name: cluster
+            - name: foobar
               manifest: |-
                 {
-                  "connection": [
-                    {
-                      "host": "${element(aws_instance.cluster[*].public_ip, 0)}"
-                    }
-                  ],
-                  "provisioner": {
-                    "remote-exec": [
-                      {
-                        "inline": [
-                          "bootstrap-cluster.sh ${join(\" \",\n      aws_instance.cluster[*].private_ip)}"
-                        ]
-                      }
-                    ]
-                  },
-                  "triggers": {
-                    "cluster_instance_ids": "${join(\",\", aws_instance.cluster[*].id)}"
-                  }
+                  "name": "${var.dnsimple.domain}"
                 }
-              dependencies:
-                aws_instance.cluster: |-
-                    {
-                      "ami": "ami-0dcc1e21636832c5d",
-                      "count": 3,
-                      "instance_type": "m5.large"
-                    }
         argumentDocs:
-            id: (String) This is set to a random value at create time.
-            triggers: (Map of String) A map of arbitrary strings that, when changed, will force the null resource to be replaced, re-running any associated provisioners.
+            account_id: '- The account ID for the domain.'
+            auto_renew: '- Whether the domain is set to auto-renew.'
+            id: '- The ID of this resource.'
+            name: '- (Required) The domain name to be created'
+            private_whois: '- Whether the domain has WhoIs privacy enabled.'
+            registrant_id: '- The ID of the registrant (contact) for the domain.'
+            state: '- The state of the domain.'
+            unicode_name: '- The domain name in Unicode format.'
+        importStatements: []
+    dnsimple_email_forward:
+        subCategory: ""
+        description: '""'
+        name: dnsimple_email_forward
+        title: dnsimple_email_forward
+        examples:
+            - name: foobar
+              manifest: |-
+                {
+                  "alias_name": "sales",
+                  "destination_email": "jane.doe@example.com",
+                  "domain": "${var.dnsimple_domain}"
+                }
+        argumentDocs:
+            alias_email: '- The source email address on the domain'
+            alias_name: '- The name part (the part before the @) of the source email address on the domain'
+            destination_email: '- (Required) The destination email address on another domain'
+            domain: '- (Required) The domain to add the email forwarding rule to'
+            id: '- The email forward ID'
+        importStatements: []
+    dnsimple_lets_encrypt_certificate:
+        subCategory: ""
+        description: '""'
+        name: dnsimple_lets_encrypt_certificate
+        title: dnsimple_lets_encrypt_certificate
+        examples:
+            - name: foobar
+              manifest: |-
+                {
+                  "auto_renew": false,
+                  "domain_id": "${var.dnsimple.domain_id}",
+                  "name": "www"
+                }
+        argumentDocs:
+            authority_identifier: '- The identifying certification authority (CA)'
+            auto_renew: '- (Required) True if the certificate should auto-renew'
+            contact_id: '- (Deprecated) The contact id for the certificate'
+            created_at: '- The datetime the certificate was created'
+            csr: '- The certificate signing request'
+            domain_id: '- (Required) The domain to be issued the certificate for'
+            expires_on: '- The date the certificate will expire'
+            id: '- The certificate ID'
+            name: '- (Required) The certificate name'
+            read: (String) - The timeout for the read operation
+            signature_algorithm: '- (Optional) The signature algorithm to use for the certificate'
+            state: '- The state of the certificate'
+            timeouts: '- (Block, Optional) (see below for nested schema)'
+            updated_at: '- The datetime the certificate was last updated'
+            years: '- The years the certificate will last'
+        importStatements: []
+    dnsimple_zone_record:
+        subCategory: ""
+        description: '""'
+        name: dnsimple_zone_record
+        title: dnsimple_zone_record
+        examples:
+            - name: foobar
+              manifest: |-
+                {
+                  "name": "",
+                  "ttl": 3600,
+                  "type": "A",
+                  "value": "192.168.0.11",
+                  "zone_name": "${var.dnsimple_domain}"
+                }
+            - name: foobar
+              manifest: |-
+                {
+                  "name": "terraform",
+                  "ttl": 3600,
+                  "type": "A",
+                  "value": "192.168.0.11",
+                  "zone_name": "${var.dnsimple_domain}"
+                }
+        argumentDocs:
+            id: '- The record ID'
+            name: '- (Required) The name of the record'
+            priority: '- (Optional) The priority of the record - only useful for some record types'
+            qualified_name: '- The FQDN of the record'
+            ttl: '- (Optional) The TTL of the record'
+            type: '- (Required) The type of the record'
+            value: '- (Required) The value of the record'
+            zone_id: '- The domain ID of the record'
+            zone_name: '- (Required) The domain to add the record to'
         importStatements: []

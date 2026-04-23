@@ -4,10 +4,9 @@ import (
 	// Note(turkenh): we are importing this to embed provider schema document
 	_ "embed"
 
+	zoneRecordCluster "github.com/InvestifyTECH/provider-upjet-for-dnsimple/config/cluster/zonerecord"
+	zoneRecordNamespaced "github.com/InvestifyTECH/provider-upjet-for-dnsimple/config/namespaced/zonerecord"
 	ujconfig "github.com/crossplane/upjet/v2/pkg/config"
-
-	nullCluster "github.com/InvestifyTECH/provider-upjet-for-dnsimple/config/cluster/null"
-	nullNamespaced "github.com/InvestifyTECH/provider-upjet-for-dnsimple/config/namespaced/null"
 )
 
 const (
@@ -33,7 +32,7 @@ func GetProvider() *ujconfig.Provider {
 
 	for _, configure := range []func(provider *ujconfig.Provider){
 		// add custom config functions
-		nullCluster.Configure,
+		zoneRecordCluster.Configure,
 	} {
 		configure(pc)
 	}
@@ -57,7 +56,7 @@ func GetProviderNamespaced() *ujconfig.Provider {
 
 	for _, configure := range []func(provider *ujconfig.Provider){
 		// add custom config functions
-		nullNamespaced.Configure,
+		zoneRecordNamespaced.Configure,
 	} {
 		configure(pc)
 	}

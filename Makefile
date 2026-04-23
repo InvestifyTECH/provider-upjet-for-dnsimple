@@ -135,6 +135,15 @@ pull-docs:
 		git clone -c advice.detachedHead=false --depth 1 --filter=blob:none --branch "v$(TERRAFORM_PROVIDER_VERSION)" --sparse "$(TERRAFORM_PROVIDER_REPO)" "$(WORK_DIR)/$(TERRAFORM_PROVIDER_SOURCE)"; \
 	fi
 	@git -C "$(WORK_DIR)/$(TERRAFORM_PROVIDER_SOURCE)" sparse-checkout set "$(TERRAFORM_DOCS_PATH)"
+	@# DNSimple's Terraform docs frontmatter only contains `page_title`, but the
+	@# upjet scraper's xpath requires both `page_title` and `description` to
+	@# identify the prelude. Inject a stub `description:` line after `page_title:`
+	@# for any doc missing it.
+	@for f in "$(WORK_DIR)/$(TERRAFORM_PROVIDER_SOURCE)/$(TERRAFORM_DOCS_PATH)"/*.md; do \
+		if [ -f "$$f" ] && ! grep -q '^description:' "$$f"; then \
+			awk '/^page_title:/ && !done {print; print "description: \"\""; done=1; next} {print}' "$$f" > "$$f.tmp" && mv "$$f.tmp" "$$f"; \
+		fi; \
+	done
 
 generate.init: $(TERRAFORM_PROVIDER_SCHEMA) pull-docs
 
