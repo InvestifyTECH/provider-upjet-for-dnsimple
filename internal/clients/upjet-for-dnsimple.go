@@ -24,12 +24,8 @@ const (
 	errUnmarshalCredentials = "cannot unmarshal dnsimple credentials as JSON"
 
 	// secret credential keys
-	keyToken   = "dnsimple_token"
-	keyAccount = "dnsimple_account"
-
-	// Terraform provider argument names
-	tfKeyToken   = "token"
-	tfKeyAccount = "account"
+	keyToken   = "token"
+	keyAccount = "account"	
 )
 
 // TerraformSetupBuilder builds Terraform a terraform.SetupFn function which
@@ -57,13 +53,13 @@ func TerraformSetupBuilder(version, providerSource, providerVersion string) terr
 		if err := json.Unmarshal(data, &creds); err != nil {
 			return ps, errors.Wrap(err, errUnmarshalCredentials)
 		}
-		ps.Configuration = map[string]any{}
-		if v, ok := creds[keyAccount]; ok {
-			ps.Configuration[tfKeyAccount] = v
+
+		// Set credentials in Terraform provider configuration.
+		ps.Configuration = map[string]any{
+			keyAccount: creds[keyAccount],
+			keyToken: creds[keyToken],
 		}
-		if v, ok := creds[keyToken]; ok {
-			ps.Configuration[tfKeyToken] = v
-		}
+		
 		return ps, nil
 	}
 }
