@@ -25,7 +25,7 @@ const (
 
 	// secret credential keys
 	keyToken   = "token"
-	keyAccount = "account"	
+	keyAccount = "account"
 )
 
 // TerraformSetupBuilder builds Terraform a terraform.SetupFn function which
@@ -57,9 +57,9 @@ func TerraformSetupBuilder(version, providerSource, providerVersion string) terr
 		// Set credentials in Terraform provider configuration.
 		ps.Configuration = map[string]any{
 			keyAccount: creds[keyAccount],
-			keyToken: creds[keyToken],
+			keyToken:   creds[keyToken],
 		}
-		
+
 		return ps, nil
 	}
 }
